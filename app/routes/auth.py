@@ -9,17 +9,21 @@ USER_CREDENTIALS = {
 
 @auth_bp.route('/login', methods=["GET", "POST"])
 def login():
+    username = None
+    password = None
+
     if request.method == "POST":
         username = request.form.get('username')
-        password = request.form.get('pasword')
-        
+        password = request.form.get('password')
+
         if username == USER_CREDENTIALS['username'] and password == USER_CREDENTIALS['password']:
             session['user'] = username
             flash('Login Successful', 'success')
+            return redirect(url_for('tasks.view_tasks'))
         else:
             flash('Invalid username or password', 'danger')
-            
-    return render_template('login.html')
+
+    return render_template('login.html', username=username, password=password)
     
 @auth_bp.route("/logout")
 def logout():
